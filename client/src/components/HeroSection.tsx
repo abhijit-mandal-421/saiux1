@@ -1,14 +1,15 @@
-import { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { ChevronDown } from 'lucide-react';
+import { useState, useEffect } from "react";
+import { ChevronDown } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function HeroSection() {
-  const [displayText, setDisplayText] = useState('');
+  const [displayText, setDisplayText] = useState("");
   const [isTypingComplete, setIsTypingComplete] = useState(false);
   const [ripples, setRipples] = useState<{ x: number; y: number; id: number }[]>([]);
-  
-  const fullText = 'AI Innovation Designed for Humans';
 
+  const fullText = "AI Innovation Designed for Humans";
+
+  // Typing effect
   useEffect(() => {
     let currentIndex = 0;
     const typingInterval = setInterval(() => {
@@ -19,93 +20,172 @@ export default function HeroSection() {
         setIsTypingComplete(true);
         clearInterval(typingInterval);
       }
-    }, 80);
-
+    }, 70);
     return () => clearInterval(typingInterval);
   }, []);
 
+  // Ripple click effect for CTA
   const handleCTAClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
     const id = Date.now();
-    
-    setRipples((prev) => [...prev, { x, y, id }]);
-    
-    setTimeout(() => {
-      setRipples((prev) => prev.filter((ripple) => ripple.id !== id));
-    }, 600);
 
-    const contactSection = document.getElementById('contact');
-    if (contactSection) {
-      contactSection.scrollIntoView({ behavior: 'smooth' });
-    }
+    setRipples((prev) => [...prev, { x, y, id }]);
+    setTimeout(() => setRipples((prev) => prev.filter((r) => r.id !== id)), 500);
+
+    document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
     <section
       id="home"
-      className="relative min-h-screen flex items-center justify-center overflow-hidden"
+      className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden text-white"
     >
-      <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70 z-10" />
-      
-      <div className="relative z-20 max-w-5xl mx-auto px-6 lg:px-8 text-center">
-        <h1 className="text-5xl md:text-7xl font-bold mb-6 min-h-[4.5rem] md:min-h-[5.5rem]">
+      {/* Subtle radial glow overlay */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(91,33,182,0.12),transparent_70%)] pointer-events-none" />
+
+      {/* Hero Content */}
+      <div className="relative z-10 max-w-5xl mx-auto px-6 lg:px-8 text-center">
+        {/* Typing Title */}
+        <motion.h1
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="text-5xl md:text-7xl font-bold mb-6 leading-tight min-h-[4.5rem]"
+        >
           <span className="bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
             {displayText}
             {!isTypingComplete && (
-              <span className="inline-block w-1 h-12 md:h-16 bg-blue-500 ml-1 animate-blink" />
+              <span className="inline-block w-1 h-12 md:h-14 bg-blue-400 ml-1 animate-blink" />
             )}
           </span>
-        </h1>
-        
-        <p className="text-xl md:text-2xl text-foreground/80 mb-4 max-w-3xl mx-auto">
-          At SAIEX, we believe technology should simplify life — not complicate it.
-        </p>
-        
-        <p className="text-lg md:text-xl text-foreground/70 mb-12 max-w-3xl mx-auto">
-          We specialize in Artificial Intelligence solutions that are built with deep understanding 
-          of human behavior, ensuring every interaction is smooth, intuitive, and delightful.
-        </p>
-        
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <Button
-            size="lg"
-            className="relative overflow-hidden bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-6 text-lg"
+        </motion.h1>
+
+        {/* Subheading */}
+        <motion.p
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, delay: 0.2 }}
+          className="text-xl md:text-2xl text-white/90 mb-4 max-w-3xl mx-auto"
+        >
+          Technology that understands people — built with intelligence, designed with empathy.
+        </motion.p>
+
+        {/* Description */}
+        <motion.p
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, delay: 0.35 }}
+          className="text-base md:text-lg text-white/70 mb-14 max-w-3xl mx-auto"
+        >
+          At <span className="text-blue-400 font-medium">SAIUX</span>, we merge AI and design to
+          craft intelligent systems that simplify life and amplify human potential.
+        </motion.p>
+
+        {/* CTA Buttons */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.5 }}
+          className="flex flex-col sm:flex-row items-center justify-center gap-5"
+        >
+          {/* Primary Button with Chevron Inside */}
+          <button
             onClick={handleCTAClick}
-            data-testid="button-cta-primary"
+            className="relative overflow-hidden w-full sm:w-auto px-10 py-4 text-lg font-semibold text-white rounded-xl
+               bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500
+               shadow-[0_0_25px_rgba(139,92,246,0.3)]
+               transition-all duration-300 hover:scale-[1.05] hover:shadow-[0_0_35px_rgba(139,92,246,0.5)]
+               focus:outline-none focus:ring-2 focus:ring-purple-400/50 focus:ring-offset-0 flex items-center justify-center gap-3"
           >
+            {/* Ripple Effect */}
             {ripples.map((ripple) => (
               <span
                 key={ripple.id}
-                className="absolute bg-white/30 rounded-full animate-ripple pointer-events-none"
+                className="absolute bg-white/30 rounded-full pointer-events-none"
                 style={{
                   left: ripple.x,
                   top: ripple.y,
-                  width: '20px',
-                  height: '20px',
-                  transform: 'translate(-50%, -50%)',
+                  width: "10px",
+                  height: "10px",
+                  transform: "translate(-50%, -50%) scale(0)",
+                  opacity: 1,
+                  animation:
+                    "ripple 0.6s linear forwards, fadeout 0.6s ease-out forwards",
                 }}
               />
             ))}
-            Book a Free Strategy Call
-          </Button>
-          
-          <Button
-            size="lg"
-            variant="outline"
-            className="bg-background/10 backdrop-blur-md border-foreground/20 text-foreground hover:bg-background/20 px-8 py-6 text-lg"
-            onClick={() => document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' })}
-            data-testid="button-cta-secondary"
+
+            {/* Text & Icon inside the button */}
+            <span className="relative z-10 flex items-center gap-2 font-semibold">
+              🚀 Book a Free Strategy Call
+              <ChevronDown className="h-5 w-5 text-white/80 animate-bounce-slow" />
+            </span>
+
+            {/* Shimmer Effect */}
+            <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer" />
+          </button>
+
+          {/* Secondary Button */}
+          <button
+            onClick={() =>
+              document.getElementById("services")?.scrollIntoView({ behavior: "smooth" })
+            }
+            className="relative px-10 py-4 text-lg font-semibold rounded-xl border border-white/20
+               bg-white/5 backdrop-blur-sm text-white/90
+               transition-all duration-300 hover:border-purple-400 hover:text-purple-300 hover:scale-[1.03]"
           >
             Explore Services
-          </Button>
-        </div>
-
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
-          <ChevronDown className="h-8 w-8 text-foreground/50" />
-        </div>
+          </button>
+        </motion.div>
       </div>
+
+      {/* Animations */}
+      <style >{`
+        @keyframes shimmer {
+          0% {
+            transform: translateX(-100%);
+          }
+          100% {
+            transform: translateX(100%);
+          }
+        }
+        .animate-shimmer {
+          background-size: 200% 100%;
+          animation: shimmer 2.5s infinite linear;
+          opacity: 0.4;
+        }
+
+        @keyframes ripple {
+          0% {
+            transform: translate(-50%, -50%) scale(0);
+            opacity: 1;
+          }
+          100% {
+            transform: translate(-50%, -50%) scale(8);
+            opacity: 0;
+          }
+        }
+
+        @keyframes fadeout {
+          100% {
+            opacity: 0;
+          }
+        }
+
+        @keyframes bounce-slow {
+          0%, 100% {
+            transform: translateY(0);
+          }
+          50% {
+            transform: translateY(4px);
+          }
+        }
+        .animate-bounce-slow {
+          animation: bounce-slow 2s infinite ease-in-out;
+        }
+      `}</style>
     </section>
   );
 }
